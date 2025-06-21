@@ -1,4 +1,5 @@
 import * as t from '@babel/types';
+import traverse from '@babel/traverse';
 
 /**
  * Copies an expression.
@@ -7,6 +8,22 @@ import * as t from '@babel/types';
  */
 export const copyExpression = (expression: t.Expression): t.Expression => {
     return t.cloneNode(expression, /* deep */ true);
+};
+
+/**
+ * Counts the number of nodes contained within a node.
+ * @param node The node.
+ * @returns The number of nodes.
+ */
+export const countNodes = (node: t.Node): number => {
+    let count = 0;
+    traverse(node, {
+        enter() {
+            count++;
+        },
+        noScope: true
+    });
+    return count;
 };
 
 /**
