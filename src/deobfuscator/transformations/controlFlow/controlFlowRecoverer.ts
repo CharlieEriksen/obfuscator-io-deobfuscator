@@ -60,7 +60,7 @@ export class ControlFlowRecoverer extends Transformation {
                     cases.map(c => [(c.test as t.StringLiteral).value, c.consequent])
                 );
 
-                const statements = [];
+                const statements: t.Statement[] = [];
                 for (let i = initialValue; ; i++) {
                     const state = states[i];
                     if (!casesMap.has(state)) {
@@ -68,7 +68,11 @@ export class ControlFlowRecoverer extends Transformation {
                     }
 
                     const blockStatements = casesMap.get(state) as t.Statement[];
-                    statements.push(...blockStatements.filter(s => !t.isContinueStatement(s)));
+                    for (const statement of blockStatements) {
+                        if (!t.isContinueStatement(statement)) {
+                            statements.push(t.cloneNode(statement, true));
+                        }
+                    }
                     if (
                         blockStatements.length > 0 &&
                         t.isReturnStatement(blockStatements[blockStatements.length - 1])

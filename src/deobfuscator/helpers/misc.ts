@@ -18,7 +18,7 @@ export const copyExpression = (expression: t.Expression): t.Expression => {
  * @param value The value.
  */
 export const setProperty = (obj: any, property: string, value: any): void => {
-    (obj as Record<string, any>).property = value;
+    (obj as Record<string, any>)[property] = value;
 };
 
 /**
@@ -28,5 +28,5 @@ export const setProperty = (obj: any, property: string, value: any): void => {
  * @returns
  */
 export const getProperty = (obj: any, property: string): any => {
-    return (obj as Record<string, any>).property;
+    return (obj as Record<string, any>)[property];
 };
