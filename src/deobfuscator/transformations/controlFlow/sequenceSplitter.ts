@@ -102,6 +102,7 @@ export class SequenceSplitter extends Transformation {
                     } else {
                         path.replaceWithMultiple(replacements);
                     }
+                    path.skip();
                     self.setChanged();
                 }
             },
@@ -109,6 +110,7 @@ export class SequenceSplitter extends Transformation {
                 const expressions = path.node.expressions;
                 if (expressions.length == 1) {
                     path.replaceWith(expressions[0]);
+                    path.skip();
                     self.setChanged();
                     return;
                 }
@@ -140,20 +142,22 @@ export class SequenceSplitter extends Transformation {
                     const firstExpressions = expressions.splice(0, expressions.length - 2);
 
                     if (firstExpressions.length > 0) {
-                        const expressionStatements = firstExpressions.map(e =>
-                            t.expressionStatement(e)
-                        );
-                        outerPath.insertBefore(expressionStatements);
-                        self.setChanged();
-                    }
-                } else {
-                    const lastExpression = expressions.splice(expressions.length - 1, 1)[0];
-                    const expressionStatements = expressions.map(e => t.expressionStatement(e));
+                    const expressionStatements = firstExpressions.map(e =>
+                        t.expressionStatement(e)
+                    );
                     outerPath.insertBefore(expressionStatements);
-                    path.replaceWith(lastExpression);
+                    path.skip();
                     self.setChanged();
                 }
+            } else {
+                const lastExpression = expressions.splice(expressions.length - 1, 1)[0];
+                const expressionStatements = expressions.map(e => t.expressionStatement(e));
+                outerPath.insertBefore(expressionStatements);
+                path.replaceWith(lastExpression);
+                path.skip();
+                self.setChanged();
             }
+        }
         });
 
         return this.hasChanged();

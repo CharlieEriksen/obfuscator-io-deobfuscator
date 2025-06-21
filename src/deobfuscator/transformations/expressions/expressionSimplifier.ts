@@ -52,6 +52,7 @@ export class ExpressionSimplifier extends Transformation {
                     : self.simplifyBinaryExpression(path.node as t.BinaryExpression);
                 if (replacement) {
                     path.replaceWith(replacement);
+                    path.skip();
                     self.setChanged();
                 }
             }

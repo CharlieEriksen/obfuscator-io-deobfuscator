@@ -81,8 +81,10 @@ export class ControlFlowRecoverer extends Transformation {
                     }
                 }
 
+                path.skip();
                 path.remove();
                 nextPath.replaceWithMultiple(statements);
+                nextPath.skip();
                 self.setChanged();
             }
         });

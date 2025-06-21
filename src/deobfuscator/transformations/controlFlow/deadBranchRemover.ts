@@ -23,6 +23,7 @@ export class DeadBranchRemover extends Transformation {
                             ? path.node.consequent.body
                             : [path.node.consequent];
                         path.replaceWithMultiple(statements.map(s => t.cloneNode(s, true)));
+                        path.skip();
                         self.setChanged();
                     } else {
                         if (path.node.alternate) {
@@ -36,6 +37,7 @@ export class DeadBranchRemover extends Transformation {
                         } else {
                             path.remove();
                         }
+                        path.skip();
                         self.setChanged();
                     }
                 }
@@ -45,6 +47,7 @@ export class DeadBranchRemover extends Transformation {
                 if (self.isSemiLiteral(path.node.test)) {
                     const replacement = self.isTruthy(path.node.test) ? path.node.consequent : path.node.alternate;
                     path.replaceWith(replacement);
+                    path.skip();
                     self.setChanged();
                 }
                 // simplify expressions in form (a ? true : false)
@@ -64,6 +67,7 @@ export class DeadBranchRemover extends Transformation {
                     }
 
                     path.replaceWith(replacement);
+                    path.skip();
                     self.setChanged();
                 }
             }
