@@ -17,11 +17,11 @@ export class ProxyFunctionInliner extends Transformation {
      */
     public execute(log: LogFunction): boolean {
         const usages: [NodePath, ProxyFunctionVariable][] = [];
-        let depth = 0;
 
         traverse(this.ast, {
             enter(path) {
-                setProperty(path, 'depth', depth++);
+                const depth = path.getAncestry().length;
+                setProperty(path, 'depth', depth);
                 const variable = findConstantVariable<ProxyFunctionExpression>(path, isProxyFunctionExpression, true);
                 if (!variable) {
                     return;
