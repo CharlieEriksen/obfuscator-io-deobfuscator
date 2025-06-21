@@ -22,14 +22,16 @@ export class DeadBranchRemover extends Transformation {
                         const statements = t.isBlockStatement(path.node.consequent)
                             ? path.node.consequent.body
                             : [path.node.consequent];
-                        path.replaceWithMultiple(statements);
+                        path.replaceWithMultiple(statements.map(s => t.cloneNode(s, true)));
                         self.setChanged();
                     } else {
                         if (path.node.alternate) {
                             if (t.isBlockStatement(path.node.alternate)) {
-                                path.replaceWithMultiple(path.node.alternate.body);
+                                path.replaceWithMultiple(
+                                    path.node.alternate.body.map(s => t.cloneNode(s, true))
+                                );
                             } else {
-                                path.replaceWith(path.node.alternate);
+                                path.replaceWith(t.cloneNode(path.node.alternate, true));
                             }
                         } else {
                             path.remove();

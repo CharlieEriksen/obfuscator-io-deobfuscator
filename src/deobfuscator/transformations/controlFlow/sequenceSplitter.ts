@@ -88,7 +88,7 @@ export class SequenceSplitter extends Transformation {
             VariableDeclaration(path) {
                 if (path.node.declarations.length > 1) {
                     const replacements = path.node.declarations.map(d =>
-                        t.variableDeclaration(path.node.kind, [d])
+                        t.variableDeclaration(path.node.kind, [t.cloneNode(d, true)])
                     );
 
                     if (
