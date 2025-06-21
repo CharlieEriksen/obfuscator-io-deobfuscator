@@ -1,6 +1,4 @@
-import generate from '@babel/generator';
 import * as t from '@babel/types';
-import {parseExpression} from '@babel/parser';
 
 /**
  * Copies an expression.
@@ -8,7 +6,7 @@ import {parseExpression} from '@babel/parser';
  * @returns The copy.
  */
 export const copyExpression = (expression: t.Expression): t.Expression => {
-    return parseExpression(generate(expression).code);
+    return t.cloneNode(expression, /* deep */ true);
 };
 
 /**
