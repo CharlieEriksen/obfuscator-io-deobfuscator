@@ -34,11 +34,11 @@ export class ObjectSimplifier extends Transformation {
     public execute(log: LogFunction): boolean {
         const self = this;
         const usages: [NodePath, ProxyObject][] = [];
-        let depth = 0;
 
         traverse(this.ast, {
             enter(path) {
-                setProperty(path, 'depth', depth++);
+                const depth = path.getAncestry().length;
+                setProperty(path, 'depth', depth);
                 const variable = findConstantVariable<ProxyObjectExpression>(path, isProxyObjectExpression);
                 if (!variable) {
                     return;
